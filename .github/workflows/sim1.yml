@@ -15,26 +15,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set Xcode version
-      run: |
-        echo "Setting Xcode version..."
-        sudo xcode-select -s /Applications/Xcode_15.4.app
+    - name: Set up Xcode
+      run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+    - name: Build with xcodebuild
+      run: xcodebuild -project sim.xcodeproj -scheme sim -destination 'platform=iOS Simulator,name=iPhone 12'
+        
     - name: List all available simulators (debugging)
       run: |
         echo "Listing all available simulators..."
         # List all simulators without filtering to debug output
         xcrun simctl list devices
-    - name: Find .xcworkspace file
-      run: find . -name "*.xcworkspace"
+   
 
 
-    - name: Build 
-      run: |
-          xcodebuild \
-            -workspace sim.xcworkspace \
-            -scheme sim \
-            -derivedDataPath DerivedData/ \
-            -enableCodeCoverage YES \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.1" \
-            clean build test | xcbeautify
+  
