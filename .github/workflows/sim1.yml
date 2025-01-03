@@ -19,7 +19,7 @@ jobs:
       run: xcodebuild -version
 
     - name: Set up Xcode
-      run: sudo xcode-select --switch /Applications/Xcode_16.2.app/Contents/Developer
+      run: sudo xcode-select --switch /Applications/Xcode_15.4.app/Contents/Developer
 
     - name: Build with xcodebuild
       run: xcodebuild -project sim.xcodeproj -scheme sim -destination 'platform=iOS Simulator,name=iPhone 15 pro'
