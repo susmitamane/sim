@@ -28,13 +28,12 @@ jobs:
 
     - name: Create iPhone 15 pro simulator if not exists
       run: |
+        DEVICE_TYPE=$(xcrun simctl list devicetypes | grep -i "iPhone 15 Pro" | awk -F '[()]' '{print $2}')
+        RUNTIME=$(xcrun simctl list runtimes | grep -i "iOS" | grep -v "unavailable" | head -n 1 | awk -F '[()]' '{print $2}')
         if ! xcrun simctl list devices | grep -q "iPhone 15 pro"; then
-          echo "Creating iPhone 15 pro simulator..."
-          xcrun simctl create "iPhone 15 pro" com.apple.CoreSimulator.SimDeviceType.iPhone-15-pro com.apple.CoreSimulator.SimRuntime.iOS-16-2
+          echo "Creating iPhone 15 pro simulator with device type $DEVICE_TYPE and runtime $RUNTIME..."
+          xcrun simctl create "iPhone 15 pro" $DEVICE_TYPE $RUNTIME
         fi
 
     - name: Build with xcodebuild
       run: xcodebuild -project sim.xcodeproj -scheme sim -destination 'platform=iOS Simulator,name=iPhone 15 pro'
-
-
-  
