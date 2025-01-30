@@ -1,0 +1,32 @@
+name: Check Xcode and Make
+
+on:
+  workflow_dispatch: # Manually trigger the workflowjobs:
+jobs:
+  check-xcode-VisionOS:
+    runs-on: [ macos-15-large ] 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Check Xcode version
+      run: xcodebuild -version
+
+    - name: Set up Xcode 16.2
+      run: |
+        XCODE_PATH="/Applications/Xcode_16.2.app/Contents/Developer"
+        if [ -d "$XCODE_PATH" ]; then
+          sudo xcode-select --switch "$XCODE_PATH"
+          echo "Switched to Xcode 16.2"
+        else
+          echo "Xcode 16.2 not found!" && exit 1
+        fi
+
+    - name: List available SDKs
+      run: xcodebuild -showsdks
+
+    - name: Build with Xcode for visionOS
+      run: |
+        xcodebuild -project sim.xcodeproj \
+          -scheme sim \
+          -destination "generic/platform=visionOS"
